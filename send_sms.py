@@ -25,10 +25,6 @@ for env in envs :
     x, y = env.split("=")
     dict.update([(x, y)])   
 
-timestamp = int(time.time() * 1000)
-timestamp = str(timestamp)
-
-access_key = dict["access_key"]
 secret_key = dict["secret_key"]
 service_id = dict["service_id"]
 to_num     = dict["to_num"]
@@ -44,6 +40,7 @@ uri = f'/sms/v2/services/{service_id}/messages'
 url = f'https://sens.apigw.ntruss.com{uri}'
 
 def	make_signature():
+    timestamp = str(int(time.time() * 1000))
 	_secret_key = bytes(secret_key, 'UTF-8')
 	method = "POST"
 	message = method + " " + uri + "\n" + timestamp + "\n" + access_key
@@ -72,7 +69,7 @@ def send_message() :
     response = requests.post(url, headers=header, data=json.dumps(data))
     print(response.text)
 
-def test_time() :
+def test_msg() :
     now = datetime.datetime.now()
     
     print(now)
@@ -80,7 +77,7 @@ def test_time() :
     print("sending clear ======")
     return schedule.CancelJob
 
-schedule.every().day.at("19:53").do(test_time)
+schedule.every().day.at("19:53").do(test_msg)
 
 while True :
     schedule.run_pending()
